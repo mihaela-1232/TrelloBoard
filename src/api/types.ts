@@ -51,6 +51,7 @@ export interface Category {
 export interface CategoryContextType {
   categories: Category[];
   addCategory: () => void;
+  deleteCategory: (id: number) => void;
   updateCategory: (id: number, value: string) => void;
   deleteEmptyCategories: (id: number) => void;
   getCategoryByTitle: (title: string) => Category | undefined;
@@ -79,7 +80,12 @@ export interface Column {
 
 export interface ColumnCardContextType {
   columns: Column[];
-  addColumn: (title: string, categoryTitle: string) => void;
+  addColumn: (
+    title: string,
+    categoryTitle: string,
+    color?: string,
+    colorBg?: string
+  ) => void;
   deleteColumn: (id: string) => void;
   addColumnTaskCard: (
     columnId: string,

@@ -21,19 +21,35 @@ export const ColumnCardProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('columns', JSON.stringify(columns));
   }, [columns]);
 
-  const addColumn = (title: string, categoryTitle: string) => {
+  const addColumn = (
+    title: string,
+    categoryTitle: string,
+    color: string = 'blue1',
+    colorBg: string = 'blue11'
+  ) => {
     if (!categoryTitle) return;
-    setColumns((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        titleColumn: title,
-        categoryTitle: decodeURIComponent(categoryTitle.trim()),
-        color: 'blue1',
-        colorBg: 'blue11',
-        cards: [],
-      },
-    ]);
+
+    setColumns((prev) => {
+      const exists = prev.some(
+        (col) =>
+          col.categoryTitle.toLowerCase() === categoryTitle.toLowerCase() &&
+          col.titleColumn.toLowerCase() === title.toLowerCase()
+      );
+
+      if (exists) return prev;
+
+      return [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          titleColumn: title,
+          categoryTitle: decodeURIComponent(categoryTitle.trim()),
+          color,
+          colorBg,
+          cards: [],
+        },
+      ];
+    });
   };
 
   const deleteColumn = (id: string) => {

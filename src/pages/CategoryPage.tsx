@@ -2,18 +2,15 @@ import { FaHome } from 'react-icons/fa';
 import { ColumnCard } from '../components/ColumnCard';
 import { MdKeyboardBackspace } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router';
-import { useCategory } from '../contexts/CategoryContext';
 import { useColumnCard } from '../contexts/ColumnCardContext';
 import { useEffect } from 'react';
 
 const CategoryPage = () => {
   const navigate = useNavigate();
   const { title } = useParams<{ title: string }>();
-  const { getCategoryByTitle } = useCategory();
-  const { columns, addColumn } = useColumnCard();
 
+  const { columns, addColumn } = useColumnCard();
   const decodedTitle = decodeURIComponent(title || '');
-  const category = getCategoryByTitle(decodedTitle);
 
   useEffect(() => {
     if (!decodedTitle) return;
@@ -23,11 +20,16 @@ const CategoryPage = () => {
     );
 
     if (!hasCategoryColumns) {
-      ['To Do', 'In Progress', 'Done'].forEach((colTitle) =>
-        addColumn(colTitle, decodedTitle)
+      const defaultColumns = [
+        { title: 'To Do', color: 'blue1', colorBg: 'blue11' },
+        { title: 'In Progress', color: 'blue2', colorBg: 'blue22' },
+        { title: 'Done', color: 'blue3', colorBg: 'blue33' },
+      ];
+
+      defaultColumns.forEach(({ title, color, colorBg }) =>
+        addColumn(title, decodedTitle, color, colorBg)
       );
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [decodedTitle]);
 
@@ -56,9 +58,6 @@ const CategoryPage = () => {
         </h1>
       </div>
       <div className="bg-slate-950 min-h-screen border-y border-slate-900">
-        <h1 className="text-3xl font-bold text-center py-6">
-          {category ? category.title : ''}
-        </h1>
         <div
           className="flex items-start gap-4 overflow-x-auto p-4 scrollbar-hide 
         justify-start md:justify-center"

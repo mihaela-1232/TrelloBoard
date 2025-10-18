@@ -33,7 +33,6 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const addCategory = () => {
     setCategories((prev) => [...prev, { id: Date.now(), title: '' }]);
   };
-
   const updateCategory = (id: number, value: string) => {
     setCategories((prev) =>
       prev.map((cat) => (cat.id === id ? { ...cat, title: value } : cat))
@@ -41,6 +40,10 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteEmptyCategories = (id: number) => {
+    setCategories((prev) => prev.filter((cat) => cat.id !== id));
+  };
+
+  const deleteCategory = (id: number) => {
     setCategories((prev) => prev.filter((cat) => cat.id !== id));
   };
 
@@ -52,6 +55,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       value={{
         categories,
         addCategory,
+        deleteCategory,
         updateCategory,
         deleteEmptyCategories,
         getCategoryByTitle,

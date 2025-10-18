@@ -1,14 +1,20 @@
 import { useNavigate } from 'react-router';
-import type { Category } from '../api/types';
 import { useCategory } from '../contexts/CategoryContext';
+import { RiDeleteBin5Line } from 'react-icons/ri';
+import type { Category } from '../api/types';
 
 export const ButtonBoardCard = () => {
   const navigate = useNavigate();
-  const { categories, addCategory, updateCategory, deleteEmptyCategories } =
-    useCategory();
+  const {
+    categories,
+    addCategory,
+    updateCategory,
+    deleteEmptyCategories,
+    deleteCategory,
+  } = useCategory();
 
   const goToCategory = (title: string) => {
-    if (title.trim()) navigate(`/category/${encodeURIComponent(title)}`);
+    navigate(`/category/${encodeURIComponent(title)}`);
   };
 
   return (
@@ -16,31 +22,45 @@ export const ButtonBoardCard = () => {
       {categories.map((cat: Category) => (
         <div
           key={cat.id}
-          className="w-80 h-50 bg-blue-400 rounded-xl px-4 py-10 border border-transparent shadow-md 
-          hover:bg-blue-200 hover:shadow-[0_0_15px_rgba(0,255,255,0.5)] 
-          hover:border-3 hover:border-blue-400 transition-all duration-300"
-          onClick={() => cat.title.trim() && goToCategory(cat.title)}
+          className="relative w-80 h-50 bg-blue-400 rounded-xl px-4 py-10 border border-transparent shadow-md 
+            hover:bg-blue-200 hover:shadow-[0_0_15px_rgba(0,255,255,0.5)] 
+            hover:border-3 hover:border-blue-400 transition-all duration-300"
         >
-          <div className="flex justify-center py-9">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteCategory(cat.id);
+            }}
+            className="absolute top-2 right-3 text-black hover:text-red-600 transition-colors"
+          >
+            <RiDeleteBin5Line size={30} />
+          </button>
+          <div
+            onClick={() => {
+              if (cat.title && cat.title.trim() !== '') {
+                goToCategory(cat.title);
+              }
+            }}
+            className="flex justify-center py-9 cursor-pointer"
+          >
             <input
               type="text"
-              autoFocus
               value={cat.title}
               onChange={(e) => updateCategory(cat.id, e.target.value)}
               onBlur={(e) => {
                 if (!e.target.value.trim()) deleteEmptyCategories(cat.id);
               }}
-              placeholder="Enter title..."
-              className="text-2xl text-slate-950 font-bold text-center bg-transparent border-none outline-none placeholder:text-slate-700"
+              placeholder="Add title..."
+              className="text-2xl text-slate-950 font-bold text-center bg-transparent border-none outline-none placeholder:text-slate-600"
             />
           </div>
         </div>
       ))}
-
       <div
         onClick={addCategory}
         className="w-80 h-50 bg-blue-200 rounded-xl px-4 py-12 border border-transparent shadow-md hover:bg-blue-100 hover:shadow-[0_0_15px_rgba(0,255,255,0.5)] 
-        hover:border-3 hover:border-blue-400 transition-all duration-300 cursor-pointer"
+          hover:border-3 hover:border-blue-400 transition-all duration-300 cursor-pointer relative"
       >
         <div className="flex justify-center">
           <div className="text-2xl text-blue-400 font-bold py-8">
