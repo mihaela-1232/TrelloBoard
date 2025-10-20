@@ -1,15 +1,7 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode} from 'react';
 import type { Column, ColumnCardContextType } from '../api/types';
 
-const ColumnCardContext = createContext<ColumnCardContextType | undefined>(
-  undefined
-);
+const ColumnCardContext = createContext<ColumnCardContextType | undefined>( undefined);
 
 export const ColumnCardProvider = ({ children }: { children: ReactNode }) => {
   const [columns, setColumns] = useState<Column[]>(() => {
@@ -176,6 +168,21 @@ export const ColumnCardProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
+const moveCard = (fromColumnId: string, toColumnId: string, cardId: string) => {
+  setColumns((prevCols) => {
+    const updated = [...prevCols];
+    const fromCol = updated.find((c) => c.id === fromColumnId);
+    const toCol = updated.find((c) => c.id === toColumnId);
+    if (!fromCol || !toCol) return prevCols;
+
+    const card = fromCol.cards.find((c) => c.id === cardId);
+    if (!card) return prevCols;
+
+    fromCol.cards = fromCol.cards.filter((c) => c.id !== cardId);
+    toCol.cards = [...toCol.cards, card];
+    return updated;
+  });
+};
   return (
     <ColumnCardContext.Provider
       value={{
@@ -188,6 +195,7 @@ export const ColumnCardProvider = ({ children }: { children: ReactNode }) => {
         addTask,
         deleteTask,
         updateTask,
+        moveCard,
       }}
     >
       {children}

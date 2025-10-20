@@ -2,6 +2,8 @@ import { ColumnTaskCard } from './ColumnTaskCard';
 import { ButtonAddCardInColumn } from './ButtonAddCardInColumn';
 import { useColumnCard } from '../contexts/ColumnCardContext';
 import type { ColumnCardProps2 } from '../api/types';
+import SortableCard from '../SortableCard';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 export const ColumnCard = ({ columnData }: ColumnCardProps2) => {
   const { addColumnTaskCard, deleteColumnTaskCard } = useColumnCard();
@@ -32,17 +34,33 @@ export const ColumnCard = ({ columnData }: ColumnCardProps2) => {
       </div>
 
       <div className="flex justify-center flex-col gap-4">
-        {cards.map((card) => (
+      <SortableContext
+  items={cards.length ? cards.map(c => `${columnId}:${c.id}`) : [`${columnId}:empty`]}
+  strategy={verticalListSortingStrategy}
+>
+  <div className="flex flex-col gap-4 min-h-[80px]">
+    {cards.length === 0 ? (
+      <SortableCard id={`${columnId}:empty`}>
+        <div className="h-35 border-2 my-4 mx-5 border-dashed border-gray-400 rounded-lg flex items-center justify-center text-gray-400">
+          Drop card here
+        </div>
+      </SortableCard>
+    ) : (
+      cards.map(card => (
+        <SortableCard key={card.id} id={`${columnId}:${card.id}`}>
           <ColumnTaskCard
-            key={card.id}
             id={card.id}
             tasks={card.tasks}
             columnId={columnId}
             onDelete={() => deleteColumnTaskCard(columnId, card.id)}
           />
-        ))}
-      </div>
+        </SortableCard>
+      ))
+    )}
+  </div>
+</SortableContext>
 
+      </div>
       <div className="flex justify-center">
         <ButtonAddCardInColumn
           onAddTaskCard={() => addColumnTaskCard(columnId)}

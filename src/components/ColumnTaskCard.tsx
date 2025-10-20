@@ -5,20 +5,10 @@ import { useState } from 'react';
 import { ButtonColumnTaskCard } from './ButtonColumnTaskCard';
 import { TaskCard } from './TaskCard';
 import { useColumnCard } from '../contexts/ColumnCardContext';
-import {
-  loadCardDescription,
-  loadCardTitle,
-  saveCardDescription,
-  saveCardTitle,
-} from '../storages/ColumnTaskCardStorage';
+import {loadCardDescription, loadCardTitle, saveCardDescription, saveCardTitle} from '../storages/ColumnTaskCardStorage';
 import type { ColumnTaskCardProps2 } from '../api/types';
 
-export const ColumnTaskCard = ({
-  id,
-  columnId,
-  tasks,
-  onDelete,
-}: ColumnTaskCardProps2) => {
+export const ColumnTaskCard = ({ id, columnId, tasks, onDelete}: ColumnTaskCardProps2) => {
   const { addTask, deleteTask, updateTask } = useColumnCard();
   const [title, setTitle] = useState(loadCardTitle(id) || '');
   const [description, setDescription] = useState(loadCardDescription(id) || '');
@@ -42,6 +32,8 @@ export const ColumnTaskCard = ({
             value={title}
             placeholder="Title"
             onChange={(e) => setTitle(e.target.value)}
+            onMouseDown={(e)=> e.stopPropagation()}
+            data-dnd-kit-disable-dnd
             onBlur={handleTitleBlur}
             className="w-full px-2 py-1 rounded"
           />
@@ -55,6 +47,8 @@ export const ColumnTaskCard = ({
           value={description}
           placeholder="Description of your project"
           onChange={(e) => setDescription(e.target.value)}
+          onMouseDown={(e)=> e.stopPropagation()}
+          data-dnd-kit-disable-dnd
           onBlur={handleDescriptionBlur}
           className="w-full px-2 py-1 rounded"
         />
@@ -73,16 +67,22 @@ export const ColumnTaskCard = ({
           color="green"
           icon={IoIosAddCircleOutline}
           onClick={() => addTask(columnId, id)}
+          onMouseDown={(e)=> e.stopPropagation()}
+          data-dnd-kit-disable-dnd
         />
         <ButtonColumnTaskCard
           color="blue"
           icon={CiEdit}
           onClick={() => setIsEditing(true)}
+          onMouseDown={(e)=> e.stopPropagation()}
+          data-dnd-kit-disable-dnd
         />
         <ButtonColumnTaskCard
           color="red"
           icon={RiDeleteBin6Line}
           onClick={onDelete}
+          onMouseDown={(e)=> e.stopPropagation()}
+          data-dnd-kit-disable-dnd
         />
       </div>
 

@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from 'react';
+import {createContext, useContext, useEffect, useState, type ReactNode} from 'react';
 import type { Category, CategoryContextType } from '../api/types';
 
 const CategoryContext = createContext<CategoryContextType | undefined>(
@@ -50,6 +44,10 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
   const getCategoryByTitle = (title: string) =>
     categories.find((cat) => cat.title === title);
 
+  const reorderCategories = (newOrder: Category[]) => {
+    setCategories(newOrder);
+  };
+  
   return (
     <CategoryContext.Provider
       value={{
@@ -59,6 +57,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
         updateCategory,
         deleteEmptyCategories,
         getCategoryByTitle,
+        reorderCategories,
       }}
     >
       {children}

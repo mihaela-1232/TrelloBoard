@@ -1,8 +1,6 @@
 import type { ButtonAddCardInColumnProps } from '../api/types';
 
-export const ButtonAddCardInColumn = ({
-  onAddTaskCard,
-}: ButtonAddCardInColumnProps) => {
+export const ButtonAddCardInColumn = ({onAddTaskCard}: ButtonAddCardInColumnProps) => {
   return (
     <div>
       <button

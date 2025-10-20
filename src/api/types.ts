@@ -1,12 +1,15 @@
 export type BoardCardProps = {
   title: string;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  isDraggable?: boolean;
+  onDelete?: ()=> void;
 };
 
 export type ButtonColumnTaskCardProps = {
   color: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onMouseDown?: (e:React.MouseEvent<HTMLButtonElement> )=> void
 };
 
 export type ColumnTaskCardProps = {
@@ -48,6 +51,13 @@ export interface Category {
   title: string;
 }
 
+export interface ButtonBoardCardProps {
+  categories: Category[];
+  updateCategory: (id: number, value: string) => void;
+  deleteCategory: (id: number) => void;
+  addCategory: () => void;
+}
+
 export interface CategoryContextType {
   categories: Category[];
   addCategory: () => void;
@@ -55,6 +65,7 @@ export interface CategoryContextType {
   updateCategory: (id: number, value: string) => void;
   deleteEmptyCategories: (id: number) => void;
   getCategoryByTitle: (title: string) => Category | undefined;
+  reorderCategories: (newOrder: Category[]) => void;
 }
 
 export interface Task {
@@ -107,6 +118,11 @@ export interface ColumnCardContextType {
     taskId: string,
     text: string
   ) => void;
+  moveCard:
+    (fromColumnId: string, 
+      toColumnId: string,
+       cardId: string
+  ) => void
 }
 
 export interface ColumnCardData {
@@ -140,3 +156,4 @@ export interface TaskCardProps2 {
   onDelete: () => void;
   onUpdate: (text: string) => void;
 }
+
